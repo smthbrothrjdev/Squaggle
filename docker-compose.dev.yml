@@ -20,13 +20,13 @@ services:
     working_dir: /app
     ports:
       - "5173:5173"
-      - "24678:24678"
+      - "24678:24678"    # Vite HMR port
     volumes:
       - ./frontend:/app
       - /app/node_modules
     command: ["sh", "-c", "npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"]
     environment:
-      - VITE_API_URL=http://localhost:8080
+      VITE_API_URL: http://localhost:8080
     stdin_open: true
     tty: true
     depends_on:
