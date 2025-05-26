@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "docker:dev": "docker compose -f ../docker-compose.yml -f ../docker-compose.dev.yml up --build",
+    "docker:prod": "docker compose -f ../docker-compose.yml -f ../docker-compose.prod.yml up --build -d",
+    "docker:down": "docker compose -f ../docker-compose.yml down",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

@@ -1,3 +1,4 @@
+
 services:
   db:
     image: postgres:16
@@ -12,18 +13,17 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    image: eclipse-temurin:21-jdk  # Use base JDK image, not prebuilt Spring app
+    image: eclipse-temurin:21-jdk
     container_name: jackso-backend
     working_dir: /app
-    command: ./gradlew bootRun
     ports:
       - "8080:8080"
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/home/gradle/.gradle
+    command: ./gradlew bootRun
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jackso_app
     depends_on:
       - db
 
@@ -31,14 +31,19 @@ services:
     image: node:20-alpine
     container_name: jackso-frontend
     working_dir: /app
-    command: npm run dev  # or bun dev if you're using Bun
     ports:
-      - "3000:3000"
+      - "5173:5173"         # Vite's default port
+      - "24678:24678"       # Vite HMR port (Vite v5+)
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Prevents overwriting node_modules
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"
+    environment:
+      - VITE_API_URL=http://localhost:8080
     stdin_open: true
     tty: true
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
