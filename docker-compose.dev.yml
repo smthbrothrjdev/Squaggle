@@ -1,18 +1,19 @@
 services:
   backend:
     image: eclipse-temurin:21-jdk
-    container_name: jackso-backend
+    entrypoint: []                   # ← delete the default java entrypoint
+    command: ["sh", "-c", "chmod +x ./gradlew && ./gradlew bootRun"]
     working_dir: /app
     ports:
       - "8080:8080"
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/home/gradle/.gradle
-    command: ["sh", "-c", "chmod +x ./gradlew && ./gradlew bootRun"]
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: dev
     depends_on:
       - db
+
 
   frontend:
     image: node:20-alpine
