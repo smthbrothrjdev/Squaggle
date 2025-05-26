@@ -1,37 +1,33 @@
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jackso
+      POSTGRES_PASSWORD: jackso123
+      POSTGRES_DB: jackso_app
+    ports: ["5432:5432"]
+
   backend:
     image: eclipse-temurin:21-jdk
-    entrypoint: []                   # ← delete the default java entrypoint
-    command: ["sh", "-c", "chmod +x ./gradlew && ./gradlew bootRun"]
+    entrypoint: []              # clear any default
+    command: ["sh","-c","chmod +x ./gradlew && ./gradlew bootRun"]
     working_dir: /app
-    ports:
-      - "8080:8080"
+    ports: ["8080:8080"]
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/home/gradle/.gradle
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jackso_app
-      SPRING_DATASOURCE_USERNAME: jackso
-      SPRING_DATASOURCE_PASSWORD: jackso123
-    depends_on:
-      - db
-
 
   frontend:
     image: node:20-alpine
-    container_name: jackso-frontend
     working_dir: /app
-    ports:
-      - "5173:5173"
-      - "24678:24678"    # Vite HMR port
+    ports: ["5173:5173","24678:24678"]
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: ["sh", "-c", "npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"]
+    command: ["sh","-c","npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"]
     environment:
       VITE_API_URL: http://localhost:8080
     stdin_open: true
     tty: true
-    depends_on:
-      - backend

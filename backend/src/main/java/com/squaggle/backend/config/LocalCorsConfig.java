@@ -1,11 +1,11 @@
+// backend/src/main/java/com/squaggle/backend/config/LocalCorsConfig.java
 package com.squaggle.backend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
-@Profile("local")
+@Profile({"local","dev"})
 @Configuration
 public class LocalCorsConfig implements WebMvcConfigurer {
     @Override
