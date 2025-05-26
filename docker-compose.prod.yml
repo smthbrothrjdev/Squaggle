@@ -1,20 +1,9 @@
-services:
-  db:
-    image: postgres:16
-    container_name: jackso-db
-    environment:
-      POSTGRES_USER: jackso
-      POSTGRES_PASSWORD: jackso123
-      POSTGRES_DB: jackso_app
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
+services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile  # Assumes fat jar build Dockerfile
+      dockerfile: Dockerfile
     container_name: jackso-backend
     ports:
       - "8080:8080"
@@ -26,12 +15,9 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile  # Assumes multi-stage Dockerfile: Vite build + Nginx
+      dockerfile: Dockerfile
     container_name: jackso-frontend
     ports:
       - "80:80"
     depends_on:
       - backend
-
-volumes:
-  pgdata:

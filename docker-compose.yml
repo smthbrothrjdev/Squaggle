@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16
+    container_name: jackso-db
     environment:
       POSTGRES_USER: jackso
       POSTGRES_PASSWORD: jackso123
@@ -9,16 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    depends_on:
-      - db
 
 volumes:
   pgdata:

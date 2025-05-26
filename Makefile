@@ -11,7 +11,7 @@ down:
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 
 logs:
-	docker compose logs -f
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
 
 rebuild:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache

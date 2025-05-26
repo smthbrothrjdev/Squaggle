@@ -1,17 +1,4 @@
-
 services:
-  db:
-    image: postgres:16
-    container_name: jackso-db
-    environment:
-      POSTGRES_USER: jackso
-      POSTGRES_PASSWORD: jackso123
-      POSTGRES_DB: jackso_app
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   backend:
     image: eclipse-temurin:21-jdk
     container_name: jackso-backend
@@ -21,30 +8,26 @@ services:
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/home/gradle/.gradle
-    command: ./gradlew bootRun
+    command: ["sh", "-c", "chmod +x ./gradlew && ./gradlew bootRun"]
     environment:
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - db
-
 
   frontend:
     image: node:20-alpine
     container_name: jackso-frontend
     working_dir: /app
     ports:
-      - "5173:5173"         # Vite's default port
-      - "24678:24678"       # Vite HMR port (Vite v5+)
+      - "5173:5173"
+      - "24678:24678"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: sh -c "npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"
+    command: ["sh", "-c", "npm install && npm run dev -- --mode dev --host 0.0.0.0 --port 5173"]
     environment:
       - VITE_API_URL=http://localhost:8080
     stdin_open: true
     tty: true
     depends_on:
       - backend
-
-volumes:
-  pgdata:
