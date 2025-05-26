@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Profile("dev")   // ← only when “dev” is active
+@Profile("local")
 @Configuration
-public class DevCorsConfig implements WebMvcConfigurer {
+public class LocalCorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry

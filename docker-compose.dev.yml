@@ -11,6 +11,9 @@ services:
       - ./backend/.gradle:/home/gradle/.gradle
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jackso_app
+      SPRING_DATASOURCE_USERNAME: jackso
+      SPRING_DATASOURCE_PASSWORD: jackso123
     depends_on:
       - db
 
