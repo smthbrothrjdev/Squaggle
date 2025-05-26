@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16
+    container_name: jackso-db
+    environment:
+      POSTGRES_USER: jackso
+      POSTGRES_PASSWORD: jackso123
+      POSTGRES_DB: jackso_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    image: eclipse-temurin:21-jdk  # Use base JDK image, not prebuilt Spring app
+    container_name: jackso-backend
+    working_dir: /app
+    command: ./gradlew bootRun
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ./backend/.gradle:/home/gradle/.gradle
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jackso_app
+    depends_on:
+      - db
+
+  frontend:
+    image: node:20-alpine
+    container_name: jackso-frontend
+    working_dir: /app
+    command: npm run dev  # or bun dev if you're using Bun
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Prevents overwriting node_modules
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
